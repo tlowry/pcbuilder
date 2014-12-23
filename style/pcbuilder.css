@@ -1,0 +1,12 @@
+/* Application specific styles*/
+
+.pcbuilderuiDialogButtons {
+    left: 0;
+    right: 0;
+    display: inline-block;
+    -webkit-user-select: none;
+    margin-top: 2px;
+}
+.pcbuilderuiDialogButtons .pcbuilderuiButton {
+    display: inline-block;
+}

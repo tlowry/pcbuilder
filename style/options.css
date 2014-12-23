@@ -1,0 +1,49 @@
+#content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    margin-top: 2%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #78787;
+}
+#title {
+    padding: 0px 0px 10px 10px;
+}
+#title img {
+    display: inline-block;
+}
+#heading {
+    display: inline-block;
+}
+#configItems {
+    margin: 0px 10px 0px 10px;
+    overflow: auto;
+}
+.configItem label {
+    display: block;
+}
+#configButtons {
+    display: inline-block;
+    padding: 0px 10px 0px 10px;
+}
+#configButtons .pcbuilderuiButton {
+    display: inline-block;
+    padding: 0px 10px 0px 10px;
+}
+.pcbuilderuiStatus {
+    margin-left: 100px;
+    text-align: center;
+    border-radius: 10%;
+    display: inline-block;
+}
+.pcbuilderuiStatusLabel {
+    margin: 3px;
+}
+#status .active {
+    display: absolute;
+}
+#authorsUrl {
+    float: right;
+    margin-right: 5%;
+}

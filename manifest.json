@@ -1,0 +1,53 @@
+{
+    "manifest_version": 2,
+    "name": "Pc builder",
+    "version": "0.5",
+
+    "description": "Pc building basket tool : Dumps basket contents from various sites into popular forum markup",
+
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+
+    "author": "Tony Lowry",
+    "homepage_url": "https://github.com/tlowry/",
+    "key": "1234567890123123",
+
+    "options_page": "pages/options.html",
+    "background": {
+        "scripts": ["js/pcbuilder.js","js/background.js"],
+        "persistent": false
+    },
+
+    "content_scripts": [{
+        "matches": [
+            "*://www.hardwareversand.de/*",
+            "*://www.mindfactory.de/*",
+            "*://www.amazon.co.uk/*",
+            "*://www.dabs.ie/*",
+            "*://www.overclockers.co.uk/*",
+            "*://www.scan.co.uk/*",
+            "*://www.specialtech.co.uk/*",
+            "*://*.pcpartpicker.com/*",
+			"*://*.komplett.ie/*"
+        ],
+        "css": ["style/pcbuilderui.css", "style/pcbuilder.css"],
+        "js": ["js/pcbuilderui.js", "lib/jquery-2.1.1.min.js", "js/plugins.js", "js/pcbuilder.js", "js/merchant.js"]
+
+    }, {
+        "matches": [
+            "*://www.boards.ie/vbulletin/*"
+        ],
+        "css": ["style/pcbuilderui.css", "style/pcbuilder.css"],
+        "js": ["js/pcbuilderui.js", "lib/jquery-2.1.1.min.js", "js/plugins.js", "js/pcbuilder.js", "js/forum.js"]
+
+    }],
+    "permissions": [
+        "storage",
+        "contextMenus",
+        "clipboardWrite",
+        "tabs"
+    ]
+}

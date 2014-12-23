@@ -1,0 +1,188 @@
+@-webkit-keyframes pulse {
+    from {
+        color: rgb(0, 0, 0);
+        box-shadow: 0px 0px 5px 2px rgba(100, 180, 220, 0.1);
+    }
+    50% {
+        color: rgb(100, 180, 220);
+        box-shadow: 0px 0px 5px 4px rgba(100, 180, 220, 0.5);
+    }
+    to {
+        color: rgb(0, 0, 0);
+        box-shadow: 0px 0px 5px 2px rgba(100, 180, 220, 0.1);
+    }
+}
+.faded {
+    opacity: 0;
+}
+.fadeOut {
+    transition: opacity 3s;
+    opacity: 0;
+}
+.fadeIn {
+    transition: opacity 0.3s;
+    opacity: 1;
+}
+.pcbuilderuiPrimary {
+    color: rgb(100, 180, 220);
+}
+/* Base widget */
+
+.pcbuilderuiWidget {
+    background: linear-gradient(#fff, #999);
+    font-family: "Arial", Times, serif;
+    font-size: medium;
+    max-height: inherit;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.pcbuilderuiWidget a {
+    color: rgba(100, 180, 220, 0.6);
+}
+.pcbuilderuiWidget a:hover {
+    transition: color 0.2s;
+    color: rgba(100, 180, 220, 0.6);
+}
+/* HDivide */
+
+.pcbuilderuiHDivide {
+    -webkit-user-select: none;
+    background: rgba(100, 180, 220, 0.9);
+    height: 2px;
+    margin: 8px 0px 8px 0px;
+    width: 100%;
+}
+/* Button */
+
+.pcbuilderuiButton {
+    box-shadow: 0px 0px 3px 1px rgba(100, 180, 220, 0.9);
+    transition: box-shadow 0.1s;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+.pulse {
+    -webkit-animation: pulse 1.5s infinite ease-in-out;
+}
+.pcbuilderuiButton:active {
+    box-shadow: 0px 0px 3px 1px rgba(75, 130, 165, 0.9);
+}
+.pcbuilderuiButton:hover {
+    transition: color 0.2s;
+    color: rgb(100, 180, 240);
+}
+.pcbuilderuiButtonLabel {
+    font-size: 12px;
+    margin: 4px 4px 4px 4px;
+}
+/* Dialog */
+
+.pcbuilderuiDialogContainer {
+    position: fixed;
+    min-width: 400px;
+    max-width: 60%;
+    max-height: 500px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 20%;
+    box-shadow: 0px 0px 102px 19px rgba(100, 180, 220, 0.9);
+    border-radius: 8px;
+    z-index: 999;
+    -webkit-user-select: text;
+    text-align: center;
+}
+.pcbuilderuiDialogHeader {
+    -webkit-user-select: text;
+    padding: 0px;
+    font-weight: bold;
+}
+.pcbuilderuiDialogHeader .pcbuilderuiButton {
+    padding-bottom: 4px;
+    float: right;
+    width: 35px;
+    height: 18px;
+    border-radius: 1px;
+}
+.pcbuilderuiDialogTitle {
+    width: 70%;
+    display: inline-block;
+}
+.pcbuilderuiDialogContent {
+    padding: 10px 10px 10px 10px;
+}
+.pcbuilderuiDialogContent::selection {
+    color: blue;
+    background: rgba(151, 230, 252, 0.4);
+}
+/* Tabs */
+
+.pcbuilderuiTabsContainer {
+    box-shadow: 0px 0px 3px 1px rgba(100, 180, 220, 0.9);
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.pcbuilderuiTabsList {
+    list-style-type: none;
+    width: 100%;
+    max-height: inherit;
+    display: flex;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    cursor: pointer;
+}
+.pcbuilderuiTabsList .pcbuilderuiTabsLink {
+    border-radius: 1px;
+    border: 1px solid rgba(100, 180, 220, 0.9);
+    border-top-right-radius: 12px;
+    border-top-left-radius: 2px;
+    transition: box-shadow 0.1s;
+    -webkit-user-select: none;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 5px 0px 1px;
+}
+.pcbuilderuiTabsList .pcbuilderuiTabsLink:hover {
+    color: rgba(100, 180, 220, 0.6);
+}
+.pcbuilderuiTabsLink.selected {
+    border-bottom: 0px;
+}
+.pcbuilderuiTabsBody {
+    width: 100%;
+    max-height: 80%;
+    overflow-y: auto;
+    max-height: 350px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.pcbuilderuiTabsBodyContent {
+    width: 100%;
+    text-align: left;
+    max-height: inherit;
+    margin: 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+.pcbuilderuiStatus {
+    text-align: center;
+}
+.pcbuilderuiStatusLabel {
+    margin: 10px;
+    overflow: hidden;
+}
+/*
+	Theme :
+		Primary : rgba(100,180,220,0.9);
+		Primary-darken : rgba(100,180,220,0.6);
+		Tertiary : none;
+		Background : rgba(174,183,186,1);
+*/
+
+.pcbuilderuiPrimary {
+    background: rgba(100, 180, 220, 0.6);
+}
+.pcbuilderuiPrimaryDarken {
+    background: rgba(100, 180, 220, 0.9);
+}
+.pcbuilderuiBackground {
+    background: rgba(211, 221, 224, 1);
+}
