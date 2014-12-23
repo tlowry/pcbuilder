@@ -10,7 +10,7 @@ Use Npm to install gulp which is the build tool
 npm install --global gulp
 
 change to the project directory
-cd /path/to/pcrigger
+cd /path/to/pcbuilder
 
 Install some gulp plugins the project needs
 npm install gulp --save-dev
