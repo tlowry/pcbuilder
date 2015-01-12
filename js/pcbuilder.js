@@ -446,6 +446,9 @@ pcbuilder.app.prototype.completeRun = function(){
 		
 		lastTab = this.options.getOption("pcbuilder.lastFormatter").attrs["value"];
 		formatterClass = pcbuilder.formatters[lastTab];
+		if(!formatterClass){
+			formatterClass = pcbuilder.formatters["Boards.ie"];
+		}
 		this.formatter = new formatterClass();
 	}
 	

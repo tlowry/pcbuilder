@@ -17,7 +17,7 @@
 
     "options_page": "pages/options.html",
     "background": {
-        "scripts": ["js/pcbuilder.js","js/background.js"],
+        "scripts": ["js/pcbuilder.js", "js/background.js"],
         "persistent": false
     },
 
@@ -31,7 +31,7 @@
             "*://www.scan.co.uk/*",
             "*://www.specialtech.co.uk/*",
             "*://*.pcpartpicker.com/*",
-			"*://*.komplett.ie/*"
+            "*://*.komplett.ie/*"
         ],
         "css": ["style/pcbuilderui.css", "style/pcbuilder.css"],
         "js": ["js/pcbuilderui.js", "lib/jquery-2.1.1.min.js", "js/plugins.js", "js/pcbuilder.js", "js/merchant.js"]
