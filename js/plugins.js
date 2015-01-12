@@ -48,8 +48,8 @@ pcbuilder.Plugin.Hwvsplugin.prototype.parse = function(basket) {
                                 case 0:
                                     // Name + url
                                     lnk = $(this).find("a").first()
-                                    
-									name = lnk.text();
+
+                                    name = lnk.text();
                                     link = "http://www.hardwareversand.de" + lnk.attr("href");
 
                                     break;
@@ -111,7 +111,7 @@ pcbuilder.Plugin.mindFactoryPlugin.prototype.constructor = pcbuilder.Plugin.mind
 
 pcbuilder.Plugin.mindFactoryPlugin.prototype.parse = function(basket) {
 
-    // Mindfactory basket is vailable on all pages so no need to redirect
+    // Mindfactory basket is available on all pages so no need to redirect
     var basketForm = $("#box_cart");
     if (basketForm.length) {
 
@@ -198,8 +198,7 @@ pcbuilder.Plugin.amazonPlugin.prototype.parse = function(basket) {
                 price = parseFloat(priceText);
 
                 var lnk = $(this).find(".sc-product-link:first");
-                link = lnk.attr("href");
-
+                link = window.location.host + lnk.attr("href");
                 desc = lnk.find(".sc-product-title").first().text();
 
                 basket.addLine(desc, link, qty, qty * price);
@@ -322,7 +321,6 @@ pcbuilder.Plugin.ocukPlugin.prototype.parse = function(basket) {
                 // Skip the first table row with headers
                 if (i > 0) {
 
-
                     if ($(this).attr("id")) {
 
                     } else if ($(this).attr("class")) {
@@ -369,7 +367,6 @@ pcbuilder.Plugin.ocukPlugin.prototype.parse = function(basket) {
                                     price = parseFloat(priceStr);
                                     break;
                             }
-
 
                         })
 
@@ -672,50 +669,68 @@ pcbuilder.Plugin.komplettPlugin.prototype.parse = function(basket) {
                 qty = 1;
                 price = 0.0;
 
-                lnk = $(this).find("#ctl00_ContentPlaceHolder1_shoppingCart_shoppingcartDialog_shoppingItemsRepeater_ctl01_productTitleHyperLink").first();
-				
-				
-				/*
-				var regex = new RegExp("[0-9]"); // expression here
+                // link id varies a little, use a regex to find it
+                var linkExp = new RegExp(".*productTitleHyperLink");
+                lnk = $(this).find("a").filter(function() {
+                    return linkExp.exec($(this).attr('id'));
+                }).first();
 
-				$("#id a").filter(function () {
-					return regex.test($(this).text()); 
-				});
-				*/
-				
-				if(lnk.length > 0){
-				
-					link = lnk.attr("href");
-					link = "http://"+window.location.host + link;
-					
-					dsc = $(this).find("#ctl00_ContentPlaceHolder1_shoppingCart_shoppingcartDialog_shoppingItemsRepeater_ctl01_productTitleLabel").first();
-					desc = dsc.text();
+                if (lnk.length > 0) {
 
-					basket.addLine(desc, link, qty, price);
-					
-					qtydiv = $(this).find(".shoppingcart-listquantity input").first();
-					if(qtydiv.length > 0){
-						console.log("Have qty div")
-					}
-					qtyInput = $(this).find(".shoppingcart-listquantity input").first();
-					if(qtyInput.length > 0){
-						console.log("Have qty input")
-					}else{
-						console.log("fuck");
-					}
-				
-				}
+                    link = lnk.attr("href");
+                    link = "http://" + window.location.host + link;
 
+                    var descExp = new RegExp(".*_productTitleLabel");
+                    dsc = $(this).find("span").filter(function() {
+                        return descExp.exec($(this).attr('id'));
+                    }).first();
 
+                    desc = dsc.text();
+
+                    var qtyExp = new RegExp(".*productQuantityTextBox");
+                    qtyInput = $(this).find("input").filter(function() {
+                        return qtyExp.exec($(this).attr('id'));
+                    }).first();
+
+                    if (qtyInput.length > 0) {
+                        qty = parseFloat(qtyInput.val());
+                    }
+
+                    var totalExp = new RegExp(".*_productSubtotalLabel");
+
+                    subTotalSpan = $(this).find("span").filter(function() {
+                        return totalExp.exec($(this).attr('id'));
+                    }).first();
+
+                    priceAndCurrency = subTotalSpan.text();
+                    basket.currency = priceAndCurrency.charAt(0);
+                    price = parseFloat(priceAndCurrency.substring(1, priceAndCurrency.length));
+
+                    basket.addLine(desc, link, qty, price);
+                }
             });
-
-            //basket.addLine(shipName, "", 0, shipCost);
 
             if (basket.size() < 1) {
                 basket.error = {
                     title: "Empty",
-                    message: "Please add an item to the list"
+                    message: "Please add an item to the basket"
                 };
+            } else {
+
+                shipForm = $("#ctl00_ContentPlaceHolder1_deliveryMethod_orderMethodDialog_dialogContent").first();
+                if (shipForm.length > 0) {
+                    methodSpan = shipForm.find("#ctl00_ContentPlaceHolder1_deliveryMethod_orderMethodDialog_deliveryMethodASPxCallbackPanel_orderMethodRepeater_ctl01_orderMethodTitleLabel").first();
+                    method = methodSpan.text();
+
+                    costSpan = shipForm.find("#ctl00_ContentPlaceHolder1_deliveryMethod_orderMethodDialog_deliveryMethodASPxCallbackPanel_orderMethodRepeater_ctl01_orderMethodPriceLabel");
+                    costText = costSpan.text();
+                    costNum = costText.substring(1, costText.length);
+                    shipCost = parseFloat(costNum);
+
+                    basket.addLine("Shipping (" + method + ") ", "", 0, shipCost);
+                } else {
+                    pcbuilder.trace("Failed to find shipping");
+                }
             }
         } else {
             pcbuilder.trace("Couldn't find the basket, forms " + basketForm.length + " forms");
@@ -812,7 +827,7 @@ pcbuilder.Formatter.Boardsie.prototype.parse = function(basket, addLinks) {
     };
 
     if (basket.size() > 0) {
-        txt = "[TABLE][B]Item[/B]|[B]Qty[/B]|[B]Price[/B]<br>";
+        txt = "[TABLE][B]Item[/B]|[B]qty[/B]|[B][/B]|[B]Price[/B]<br>";
 
         for (i = 0; i < basket.size(); i++) {
 
@@ -823,12 +838,12 @@ pcbuilder.Formatter.Boardsie.prototype.parse = function(basket, addLinks) {
                 txt += line.url;
                 txt += "\"]"
             }
-			
-			if(line.name && line.name.length > 0){
-				txt += line.name;
-			}else{
-				txt += "UNKNOWN";
-			}
+
+            if (line.name && line.name.length > 0) {
+                txt += line.name;
+            } else {
+                txt += "UNKNOWN";
+            }
 
             if (addLinks && line.url.length > 0) {
                 txt += "[/URL]"
@@ -836,16 +851,18 @@ pcbuilder.Formatter.Boardsie.prototype.parse = function(basket, addLinks) {
 
             txt += "|";
             if (line.quantity > 0) {
+                txt += "[CENTER]";
                 txt += line.quantity;
+                txt += "[/CENTER]";
             }
             txt += "|";
-
-            txt += basket.currency + line.price.toFixed(2);
-
-            txt += "<br>";
+            txt += basket.currency;
+            txt += "|[RIGHT]";
+            txt += line.price.toFixed(2);
+            txt += "[/RIGHT]|<br>";
         }
-
-        txt += "[B]Total[/B]|[B][/B]|[B]" + basket.currency + basket.total.toFixed(2) + "[/B][/TABLE]";
+        txt += "[B]Total[/B]|[B][/B]|" + basket.currency + "|[RIGHT]";
+        txt += basket.total.toFixed(2) + "[/RIGHT][/TABLE]";
         ret.result = txt;
     } else {
         ret.error = {
@@ -853,7 +870,6 @@ pcbuilder.Formatter.Boardsie.prototype.parse = function(basket, addLinks) {
             message: "basket is empty"
         };
     }
-
     return ret;
 };
 
@@ -874,7 +890,7 @@ pcbuilder.Formatter.Reddit.prototype.parse = function(basket, addLinks) {
     };
 
     if (basket.size() > 0) {
-        txt = "Item | Qty | Price <br> ---------|----------|---------- <br>";
+        txt = "Item | qty ||Price <br> --|:--:|--|-:<br>";
 
         for (i = 0; i < basket.size(); i++) {
 
@@ -899,12 +915,13 @@ pcbuilder.Formatter.Reddit.prototype.parse = function(basket, addLinks) {
             }
             txt += "|";
 
-            txt += basket.currency + line.price.toFixed(2);
+            txt += basket.currency + "|";
+            txt += line.price.toFixed(2) + "|";
 
             txt += "<br>";
         }
 
-        txt += "Total| | " + basket.currency + basket.total.toFixed(2);
+        txt += "Total| | " + basket.currency + "|" + basket.total.toFixed(2);
 
         ret.result = txt;
     } else {
@@ -920,6 +937,7 @@ pcbuilder.Formatter.Reddit.prototype.parse = function(basket, addLinks) {
 pcbuilder.Formatter.Reddit.prototype.HomeUrl = "http://www.reddit.com/subreddits";
 pcbuilder.Formatter.Reddit.prototype.HomeUrlPattern = "*://*.reddit.com/*";
 
+
 // BBCode formatter
 pcbuilder.Formatter.BBCode = function() {
     pcbuilder.Formatter.call(this, "BBCode", "BBCode formatter by github.com/tlowry/");
@@ -934,12 +952,65 @@ pcbuilder.Formatter.BBCode.prototype.parse = function(basket, addLinks) {
     };
 
     if (basket.size() > 0) {
-        txt = "[table][tr][th]Item[/th][th]Qty[/th][th]Price[/th][/tr]";
+        txt = "";
 
         for (i = 0; i < basket.size(); i++) {
 
             line = basket.getLine(i);
-            txt += "[tr][td]"
+
+            if (line.quantity > 0) {
+                txt += line.quantity + " x ";
+            }
+
+            if (addLinks && line.url.length > 0) {
+                txt += "[url=";
+                txt += line.url;
+                txt += "]";
+                txt += line.name;
+                txt += "[/url]";
+            } else {
+                txt += line.name;
+            }
+
+            txt += " ";
+
+            txt += " " + basket.currency + line.price.toFixed(2) + "<br>";
+
+        }
+
+        txt += "Total " + basket.currency + basket.total.toFixed(2);
+
+        ret.result = txt;
+    } else {
+        ret.error = {
+            title: "Empty",
+            message: "basket is empty"
+        };
+    }
+
+    return ret;
+};
+
+// BBCode Table formatter
+pcbuilder.Formatter.BBTable = function() {
+    pcbuilder.Formatter.call(this, "BBTable", "BBCode Table based formatter by github.com/tlowry/");
+}
+
+pcbuilder.Formatter.BBTable.prototype = Object.create(pcbuilder.Formatter.prototype);
+pcbuilder.Formatter.BBTable.prototype.constructor = pcbuilder.Formatter.BBTable;
+
+pcbuilder.Formatter.BBTable.prototype.parse = function(basket, addLinks) {
+    ret = {
+        result: ""
+    };
+
+    if (basket.size() > 0) {
+        txt = "[table][tr][th]Item[/th][th]qty[/th][th]Price[/th][/tr]";
+
+        for (i = 0; i < basket.size(); i++) {
+
+            line = basket.getLine(i);
+            txt += "[tr][td]";
 
             if (addLinks && line.url.length > 0) {
                 txt += "[url=";
@@ -990,7 +1061,7 @@ pcbuilder.Formatter.Html.prototype.parse = function(basket, addLinks) {
     };
 
     if (basket.size() > 0) {
-        txt = "<table><tr><th>Item</th><th>Qty</th><th>Price</th></tr>";
+        txt = "<table><tr><th>Item</th><th>qty</th><th>Price</th></tr>";
 
         for (i = 0; i < basket.size(); i++) {
 
@@ -1042,11 +1113,12 @@ pcbuilder.Formatter.Html.prototype.renderToClipBoard = function(basket, node) {
     return text;
 }
 
-// Used to lookup appropriate formatter for each site
+// Used to lookup an appropriate formatter for each site
 pcbuilder.formatters = {
     "Boards.ie": pcbuilder.Formatter.Boardsie,
     "Reddit": pcbuilder.Formatter.Reddit,
     "BBCode": pcbuilder.Formatter.BBCode,
+    "BBTable": pcbuilder.Formatter.BBTable,
     "Html": pcbuilder.Formatter.Html
 };
 
