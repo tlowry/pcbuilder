@@ -131,6 +131,7 @@
     cursor: pointer;
 }
 .pcbuilderuiTabsList .pcbuilderuiTabsLink {
+	list-style-type: none;
     border-radius: 1px;
     border: 1px solid rgba(100, 180, 220, 0.9);
     border-top-right-radius: 12px;
