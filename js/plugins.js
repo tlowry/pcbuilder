@@ -147,7 +147,7 @@ pcbuilder.Plugin.mindFactoryPlugin.prototype.parse = function(basket) {
             }
         });
         if (basket.size() > 0) {
-            basket.addLine("Shipping", "", 1, 12.50);
+            basket.addLine("Shipping", "", 1, 29.99);
         } else {
             basket.error = {
                 title: "Empty",
